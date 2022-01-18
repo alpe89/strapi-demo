@@ -1,19 +1,30 @@
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ColorsResponse } from "../../types/ColorsResponse";
 
 type SidebarProps = {
   changeColor: (value: string) => void;
 };
 
-const colors = ["ff0000", "00ff00", "0000ff"];
-
 export function Sidebar({ changeColor }: SidebarProps) {
+  const [colors, setColors] = useState<string[]>([]);
   const onSelectHandler = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
     changeColor(e.target.value);
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("http://localhost:1337/colors");
+      const json: ColorsResponse[] = await response.json();
+
+      setColors(json.map((color) => color.value));
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <aside className="bg-red-500 w-1/4 p-2">
-      <h1>Selezione Colore</h1>
+    <aside className="bg-red-500 w-1/4 h-full p-2 flex justify-center items-center flex-col">
+      <h1 className="mb-5 font-mono font-bold">Selezione Colore</h1>
       <select
         className="form-select appearance-none
       block

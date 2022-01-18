@@ -1,32 +1,39 @@
-import * as THREE from "three";
+import {
+  PerspectiveCamera,
+  WebGLRenderer,
+  DirectionalLight,
+  BoxGeometry,
+  MeshPhongMaterial,
+  Mesh,
+  Scene,
+} from "three";
+import { Cube } from "../types/Cube";
 
-export function renderCube(
-  el: HTMLDivElement
-): THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial> {
-  const scene = new THREE.Scene();
+export function renderCube(el: HTMLDivElement): Cube {
+  const scene = new Scene();
   scene.background = null;
 
-  const camera = new THREE.PerspectiveCamera(
+  const camera = new PerspectiveCamera(
     75,
     el.offsetWidth / el.offsetHeight,
     0.1,
     1000
   );
 
-  const renderer = new THREE.WebGLRenderer({ alpha: true });
+  const renderer = new WebGLRenderer({ alpha: true });
   renderer.setSize(el.offsetWidth, el.offsetHeight);
   renderer.setPixelRatio(devicePixelRatio);
   el.appendChild(renderer.domElement);
 
   const color = 0xffffff;
   const intensity = 1;
-  const light = new THREE.DirectionalLight(color, intensity);
+  const light = new DirectionalLight(color, intensity);
   light.position.set(-1, 2, 4);
   scene.add(light);
 
-  const boxGeometry = new THREE.BoxGeometry();
-  const boxMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-  const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+  const boxGeometry = new BoxGeometry();
+  const boxMaterial = new MeshPhongMaterial({ color: 0xff0000 });
+  const boxMesh = new Mesh(boxGeometry, boxMaterial);
 
   scene.add(boxMesh);
 
@@ -34,8 +41,8 @@ export function renderCube(
 
   function animate() {
     requestAnimationFrame(animate);
-    boxMesh.rotation.x += 0.01;
-    boxMesh.rotation.y += 0.01;
+    boxMesh.rotation.x += 0.006;
+    boxMesh.rotation.y += 0.006;
     renderer.render(scene, camera);
   }
   animate();
